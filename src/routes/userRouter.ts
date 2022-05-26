@@ -2,10 +2,11 @@ import * as express from "express";
 
 import { userController } from "../controller/UserController";
 import { registerValidator, loginValidator } from "../middleware/userValidator";
+import { auth } from "../middleware/auth";
 
 const userRouter = express.Router();
 
-userRouter.get("/", userController.read);
+userRouter.get("/", auth, userController.read);
 userRouter.post("/login", loginValidator, userController.login);
 userRouter.post("/register", registerValidator, userController.create);
 

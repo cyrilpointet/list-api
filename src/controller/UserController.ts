@@ -9,8 +9,7 @@ const userRepository = AppDataSource.getRepository(User);
 
 const userController = {
   async read(req: Request, res: Response, next: NextFunction) {
-    const users = await userRepository.find();
-    res.json(users);
+    res.json(req.loggedUser);
   },
 
   async create(req: Request, res: Response, next: NextFunction) {
