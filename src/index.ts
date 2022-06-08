@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as bcrypt from "bcryptjs";
+import * as cors from "cors";
 
 import { AppDataSource } from "./data-source";
 import { User } from "./entity/User";
@@ -13,6 +14,7 @@ AppDataSource.initialize()
     // create express app
     const app = express();
     app.use(bodyParser.json());
+    app.use(cors());
 
     // Routes
     app.use("/user", userRouter);
@@ -21,7 +23,7 @@ AppDataSource.initialize()
     // ...
 
     // start express server
-    app.listen(3000);
+    app.listen(8080);
 
     const users = await AppDataSource.getRepository(User).find();
     if (users.length < 1) {
@@ -48,8 +50,6 @@ AppDataSource.initialize()
       }
     }
 
-    console.log(
-      "Express server has started on port 3000. Open http://localhost:3000/users to see results"
-    );
+    console.log("Express server has started on port 8080");
   })
   .catch((error) => console.log(error));

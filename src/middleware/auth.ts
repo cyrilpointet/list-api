@@ -16,7 +16,10 @@ export const auth = async (
     if (!token) {
       throw "Token missing";
     }
-    const decodedToken = jsonwebtoken.verify(token, "RANDOM_TOKEN_SECRET");
+    const decodedToken = jsonwebtoken.verify(
+      token,
+      process.env.token || "RANDOM_TOKEN_SECRET"
+    );
     const user = await userRepository.findOneBy({ id: decodedToken.userId });
     if (!user) {
       throw "Invalid user ID";

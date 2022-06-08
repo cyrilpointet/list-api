@@ -24,7 +24,7 @@ const userController = {
         user: newUser,
         token: jsonwebtoken.sign(
           { userId: newUser.id },
-          "RANDOM_TOKEN_SECRET",
+          process.env.token || "RANDOM_TOKEN_SECRET",
           {
             expiresIn: "24h",
           }
@@ -49,9 +49,13 @@ const userController = {
     delete user.password;
     res.json({
       user,
-      token: jsonwebtoken.sign({ userId: user.id }, "RANDOM_TOKEN_SECRET", {
-        expiresIn: "24h",
-      }),
+      token: jsonwebtoken.sign(
+        { userId: user.id },
+        process.env.token || "RANDOM_TOKEN_SECRET",
+        {
+          expiresIn: "24h",
+        }
+      ),
     });
   },
 };
