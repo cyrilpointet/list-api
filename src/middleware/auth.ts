@@ -1,28 +1,34 @@
-import express from "express";
+import { NextFunction, Request, Response } from "express";
 import * as jsonwebtoken from "jsonwebtoken";
 
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
+import { errorMsg } from "../constantes/errorMsg";
 
 const userRepository = AppDataSource.getRepository(User);
 
 export const auth = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      throw "Token missing";
+      res.status(401).json(errorMsg.auth.missingToken);
     }
     const decodedToken = jsonwebtoken.verify(
       token,
       process.env.token || "RANDOM_TOKEN_SECRET"
     );
-    const user = await userRepository.findOneBy({ id: decodedToken.userId });
+    const user = await userRepository.findOne({
+      where: {
+        id: decodedToken.userId,
+      },
+      relations: ["teams"],
+    });
     if (!user) {
-      throw "Invalid user ID";
+      res.status(401).json(errorMsg.auth.invalidToken);
     } else {
       delete user.password;
       req.loggedUser = user;

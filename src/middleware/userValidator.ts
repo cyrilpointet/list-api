@@ -1,4 +1,5 @@
 import { check, validationResult } from "express-validator";
+import { errorMsg } from "../constantes/errorMsg";
 
 export const registerValidator = [
   check("name")
@@ -6,29 +7,29 @@ export const registerValidator = [
     .escape()
     .not()
     .isEmpty()
-    .withMessage("User name can not be empty!")
+    .withMessage(`nom: ${errorMsg.validation.required}`)
     .bail()
     .isLength({ min: 3 })
-    .withMessage("Minimum 3 characters required!")
+    .withMessage(`${errorMsg.validation.minLenght} : 3`)
     .bail(),
   check("email")
     .trim()
     .not()
     .isEmpty()
-    .withMessage("Email name can not be empty!")
+    .withMessage(`email: ${errorMsg.validation.required}`)
     .bail()
     .isEmail()
-    .withMessage("Invalid email address!")
+    .withMessage(errorMsg.validation.invalidEmail)
     .bail(),
   check("password")
     .trim()
     .escape()
     .not()
     .isEmpty()
-    .withMessage("Password name can not be empty!")
+    .withMessage(`mot de passe: ${errorMsg.validation.required}`)
     .bail()
     .isLength({ min: 4 })
-    .withMessage("Minimum 4 characters required!")
+    .withMessage(`${errorMsg.validation.minLenght} : 4`)
     .bail(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -43,20 +44,20 @@ export const loginValidator = [
     .trim()
     .not()
     .isEmpty()
-    .withMessage("Email name can not be empty!")
+    .withMessage(`email: ${errorMsg.validation.required}`)
     .bail()
     .isEmail()
-    .withMessage("Invalid email address!")
+    .withMessage(errorMsg.validation.invalidEmail)
     .bail(),
   check("password")
     .trim()
     .escape()
     .not()
     .isEmpty()
-    .withMessage("Password name can not be empty!")
+    .withMessage(`mot de passe: ${errorMsg.validation.required}`)
     .bail()
     .isLength({ min: 4 })
-    .withMessage("Minimum 4 characters required!")
+    .withMessage(`${errorMsg.validation.minLenght} : 4`)
     .bail(),
   (req, res, next) => {
     const errors = validationResult(req);

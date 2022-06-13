@@ -8,6 +8,7 @@ import { User } from "./entity/User";
 
 // Routes
 import { userRouter } from "./routes/userRouter";
+import { teamRouter } from "./routes/teamRouter";
 
 AppDataSource.initialize()
   .then(async () => {
@@ -18,6 +19,7 @@ AppDataSource.initialize()
 
     // Routes
     app.use("/user", userRouter);
+    app.use("/team", teamRouter);
 
     // setup express app here
     // ...

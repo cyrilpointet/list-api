@@ -1,6 +1,6 @@
 import * as express from "express";
 
-import { userController } from "../controller/UserController";
+import { userController } from "../controller/userController";
 import { registerValidator, loginValidator } from "../middleware/userValidator";
 import { auth } from "../middleware/auth";
 
