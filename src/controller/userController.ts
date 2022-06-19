@@ -26,7 +26,7 @@ const userController = {
           { userId: newUser.id },
           process.env.token || "RANDOM_TOKEN_SECRET",
           {
-            expiresIn: "24h",
+            expiresIn: "72h",
           }
         ),
       });
@@ -61,7 +61,7 @@ const userController = {
         relations: ["teams"],
       });
       res.json({
-        loggedUser,
+        user: loggedUser,
         token: jsonwebtoken.sign(
           { userId: user.id },
           process.env.token || "RANDOM_TOKEN_SECRET",
