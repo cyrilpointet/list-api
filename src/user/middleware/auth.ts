@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import * as jsonwebtoken from "jsonwebtoken";
 
-import { AppDataSource } from "../data-source";
-import { User } from "../entity/User";
-import { errorMsg } from "../constantes/errorMsg";
+import { AppDataSource } from "../../data-source";
+import { User } from "../model/User";
+import { errorMsg } from "../../constantes/errorMsg";
 
 const userRepository = AppDataSource.getRepository(User);
 

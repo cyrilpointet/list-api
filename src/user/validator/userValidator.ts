@@ -1,5 +1,5 @@
 import { check, validationResult } from "express-validator";
-import { errorMsg } from "../constantes/errorMsg";
+import { errorMsg } from "../../constantes/errorMsg";
 
 export const registerValidator = [
   check("name")

@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import * as bcrypt from "bcryptjs";
 import * as jsonwebtoken from "jsonwebtoken";
 
-import { AppDataSource } from "../data-source";
-import { User } from "../entity/User";
+import { AppDataSource } from "../../data-source";
+import { User } from "../model/User";
 
 const userRepository = AppDataSource.getRepository(User);
 

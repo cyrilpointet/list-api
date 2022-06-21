@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../data-source";
-import { Team } from "../entity/Team";
-import { errorMsg } from "../constantes/errorMsg";
+import { AppDataSource } from "../../data-source";
+import { Team } from "../model/Team";
+import { errorMsg } from "../../constantes/errorMsg";
 
 const teamRepository = AppDataSource.getRepository(Team);
 

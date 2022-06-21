@@ -1,5 +1,5 @@
 import { check, param, validationResult } from "express-validator";
-import { errorMsg } from "../constantes/errorMsg";
+import { errorMsg } from "../../constantes/errorMsg";
 
 export const teamValidator = [
   check("name")

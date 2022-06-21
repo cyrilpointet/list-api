@@ -4,11 +4,11 @@ import * as bcrypt from "bcryptjs";
 import * as cors from "cors";
 
 import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
+import { User } from "./user/model/User";
 
 // Routes
-import { userRouter } from "./routes/userRouter";
-import { teamRouter } from "./routes/teamRouter";
+import { userRouter } from "./user/router/userRouter";
+import { teamRouter } from "./team/router/teamRouter";
 
 AppDataSource.initialize()
   .then(async () => {
