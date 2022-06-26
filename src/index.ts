@@ -9,6 +9,7 @@ import { User } from "./user/model/User";
 // Routes
 import { userRouter } from "./user/router/userRouter";
 import { teamRouter } from "./team/router/teamRouter";
+import { postRouter } from "./post/router/postRouter";
 
 AppDataSource.initialize()
   .then(async () => {
@@ -20,9 +21,7 @@ AppDataSource.initialize()
     // Routes
     app.use("/user", userRouter);
     app.use("/team", teamRouter);
-
-    // setup express app here
-    // ...
+    app.use("/post", postRouter);
 
     // start express server
     app.listen(8080);

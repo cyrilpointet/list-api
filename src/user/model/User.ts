@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Team } from "../../team/model/Team";
+import { Post } from "../../post/model/Post";
 
 @Entity()
 export class User {
@@ -19,4 +20,7 @@ export class User {
 
   @OneToMany(() => Team, (team) => team.manager)
   teams: Team[];
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
 }

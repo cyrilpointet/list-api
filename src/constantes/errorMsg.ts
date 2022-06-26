@@ -6,6 +6,7 @@ export const errorMsg = {
   },
   validation: {
     missingToken: "token manquant",
+    missingParam: "paramètre manquant",
     required: "ce champs est requis",
     minLenght: "charactères minimum",
     invalidEmail: "adresse email invalide",

@@ -10,6 +10,11 @@ export class Post {
   @Column()
   content: string;
 
-  @ManyToOne(() => Team, (team) => team.posts)
+  @ManyToOne(() => Team, (team) => team.posts, {
+    onDelete: "CASCADE",
+  })
   team: Team;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 }

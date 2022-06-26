@@ -1,16 +1,16 @@
 import { check, param, validationResult } from "express-validator";
 import { errorMsg } from "../../constantes/errorMsg";
 
-export const teamCreateValidator = [
-  check("name")
+export const postCreateValidator = [
+  check("content")
     .trim()
     .escape()
     .not()
     .isEmpty()
     .withMessage(`nom: ${errorMsg.validation.required}`)
     .bail()
-    .isLength({ min: 3 })
-    .withMessage(`${errorMsg.validation.minLenght} : 3`)
+    .isLength({ min: 1 })
+    .withMessage(`${errorMsg.validation.minLenght} : 1`)
     .bail(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -20,8 +20,8 @@ export const teamCreateValidator = [
   },
 ];
 
-export const teamParamValidator = [
-  param("teamId").exists().toInt(),
+export const postParamValidator = [
+  param("postId").exists().toInt(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
