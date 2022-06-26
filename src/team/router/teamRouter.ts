@@ -4,7 +4,7 @@ import { auth } from "../../user/middleware/auth";
 import {
   teamParamValidator,
   teamCreateValidator,
-} from "../validator/teamValidator";
+} from "../middleware/teamValidator";
 import { teamController } from "../controller/teamController";
 import { isTeamManager } from "../middleware/isTeamManager";
 

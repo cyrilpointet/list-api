@@ -1,4 +1,5 @@
 export const errorMsg = {
+  notFound: "Entité non trouvée",
   auth: {
     missingToken: "token manquant",
     invalidToken: "ID utilisateur invalide",

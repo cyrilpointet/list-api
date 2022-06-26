@@ -1,7 +1,7 @@
 import * as express from "express";
 
 import { userController } from "../controller/userController";
-import { registerValidator, loginValidator } from "../validator/userValidator";
+import { registerValidator, loginValidator } from "../middleware/userValidator";
 import { auth } from "../middleware/auth";
 
 const userRouter = express.Router();

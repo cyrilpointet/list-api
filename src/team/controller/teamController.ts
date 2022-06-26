@@ -10,6 +10,7 @@ const teamController = {
       const team = await teamRepository.save({
         ...req.body,
         manager: req.loggedUser,
+        posts: [],
       });
       res.json(team);
     } catch (e) {

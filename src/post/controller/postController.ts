@@ -1,6 +1,7 @@
 import { AppDataSource } from "../../data-source";
 import { Post } from "../model/Post";
 import { Request, Response } from "express";
+import { errorMsg } from "../../constantes/errorMsg";
 
 const postRepository = AppDataSource.getRepository(Post);
 
@@ -11,8 +12,11 @@ const postController = {
         where: {
           id: req.params.postId,
         },
-        relations: ["team", "author"],
+        relations: ["team", "author", "team.manager"],
       });
+      if (!post) {
+        res.status(404).json(errorMsg.notFound);
+      }
       res.json(post);
     } catch (e) {
       console.log(e);

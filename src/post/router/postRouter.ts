@@ -5,16 +5,15 @@ import { isTeamManager } from "../../team/middleware/isTeamManager";
 import {
   postCreateValidator,
   postParamValidator,
-} from "../validator/postValidator";
+} from "../middleware/postValidator";
 import { postController } from "../controller/postController";
-import { teamParamValidator } from "../../team/validator/teamValidator";
+import { hasPostRights } from "../middleware/hasPostRights";
 
 const postRouter = express.Router();
 
 postRouter.post(
-  "/:teamId",
+  "/",
   auth,
-  teamParamValidator,
   isTeamManager,
   postCreateValidator,
   postController.create
@@ -22,6 +21,12 @@ postRouter.post(
 
 postRouter.get("/:postId", auth, postParamValidator, postController.get);
 
-postRouter.delete("/:postId", auth, postParamValidator, postController.delete);
+postRouter.delete(
+  "/:postId",
+  auth,
+  postParamValidator,
+  hasPostRights,
+  postController.delete
+);
 
 export { postRouter };

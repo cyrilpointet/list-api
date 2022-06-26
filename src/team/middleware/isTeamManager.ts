@@ -10,17 +10,21 @@ export const isTeamManager = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  if (!req.params.teamId) {
+  if (!req.params.teamId && !req.body.teamId) {
     res.status(403).json(errorMsg.validation.missingParam);
     return;
   }
+  const teamId = req.params.teamId || req.body.teamId;
   try {
     const team = await teamRepository.findOne({
       where: {
-        id: req.params.teamId,
+        id: teamId,
       },
       relations: ["manager", "posts"],
     });
+    if (!team) {
+      res.status(404).json(errorMsg.notFound);
+    }
     if (team.manager.id === req.loggedUser.id) {
       req.team = team;
       next();
