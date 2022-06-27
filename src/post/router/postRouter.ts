@@ -21,6 +21,8 @@ postRouter.post(
 
 postRouter.get("/:postId", auth, postParamValidator, postController.get);
 
+postRouter.get("/", auth, postController.getAll);
+
 postRouter.delete(
   "/:postId",
   auth,
