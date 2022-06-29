@@ -9,11 +9,8 @@ const postRepository = AppDataSource.getRepository(Post);
 const postController = {
   async getAll(req: Request, res: Response) {
     try {
-      const post = await postRepository.find(QueryHelper.getOptions(req));
-      if (!post) {
-        res.status(404).json(errorMsg.notFound);
-      }
-      res.json(post);
+      const posts = await postRepository.find(QueryHelper.getOptions(req));
+      res.json(posts);
     } catch (e) {
       console.log(e);
       res.status(401).json(e);

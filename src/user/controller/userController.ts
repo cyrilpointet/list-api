@@ -4,10 +4,21 @@ import * as jsonwebtoken from "jsonwebtoken";
 
 import { AppDataSource } from "../../data-source";
 import { User } from "../model/User";
+import { QueryHelper } from "../../utils/QueryHelper";
 
 const userRepository = AppDataSource.getRepository(User);
 
 const userController = {
+  async getAll(req: Request, res: Response) {
+    try {
+      const users = await userRepository.find(QueryHelper.getOptions(req));
+      res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.status(401).json(e);
+    }
+  },
+
   async read(req: Request, res: Response) {
     res.json(req.loggedUser);
   },

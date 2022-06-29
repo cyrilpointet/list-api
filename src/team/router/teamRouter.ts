@@ -11,6 +11,7 @@ import { isTeamManager } from "../middleware/isTeamManager";
 const teamRouter = express.Router();
 
 teamRouter.post("/", auth, teamCreateValidator, teamController.create);
+teamRouter.get("/", auth, teamController.getAll);
 teamRouter.get(
   "/:teamId",
   auth,

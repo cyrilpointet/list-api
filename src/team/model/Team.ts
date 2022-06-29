@@ -16,7 +16,7 @@ export class Team {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.teams)
+  @ManyToOne(() => User, (user) => user.managedTeams)
   manager: User;
 
   @OneToMany(() => Post, (post) => post.team)

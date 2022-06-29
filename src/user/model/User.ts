@@ -19,7 +19,7 @@ export class User {
   password: string;
 
   @OneToMany(() => Team, (team) => team.manager)
-  teams: Team[];
+  managedTeams: Team[];
 
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];

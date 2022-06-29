@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../../data-source";
 import { Team } from "../model/Team";
+import { QueryHelper } from "../../utils/QueryHelper";
 
 const teamRepository = AppDataSource.getRepository(Team);
 
@@ -21,6 +22,16 @@ const teamController = {
 
   read(req: Request, res: Response) {
     res.json(req.team);
+  },
+
+  async getAll(req: Request, res: Response) {
+    try {
+      const teams = await teamRepository.find(QueryHelper.getOptions(req));
+      res.json(teams);
+    } catch (e) {
+      console.log(e);
+      res.status(401).json(e);
+    }
   },
 
   async update(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import express from "express";
-import { Like } from "typeorm";
+import { ILike } from "typeorm";
 
 export class QueryHelper {
   static getOptions(req: express.Request) {
@@ -11,16 +11,20 @@ export class QueryHelper {
     };
   }
 
-  static getQueryFilters(req: express.Request): Record<string, string> {
-    const queryFilter = {};
+  static getQueryFilters(req: express.Request): Record<string, string>[] | {} {
+    const queryFilter = [];
     const reqFilter =
       req.query.filter && typeof req.query.filter === "string"
         ? JSON.parse(req.query.filter)
         : {};
     for (const [key, value] of Object.entries(reqFilter)) {
-      queryFilter[key] = Like(`%${value}%`);
+      // for AND query
+      //queryFilter[key] = ILike(`%${value}%`);
+
+      // for OR query
+      queryFilter.push({ [key]: ILike(`%${value}%`) });
     }
-    return queryFilter;
+    return queryFilter.length > 0 ? queryFilter : {};
   }
 
   static getQuerySort(req: express.Request): Record<string, "ASC" | "DESC"> {
