@@ -24,6 +24,7 @@ export const isTeamMember = async (
     });
     if (!team) {
       res.status(404).json(errorMsg.notFound);
+      return;
     }
     if (team.members.find((elem) => elem.user.id === req.loggedUser.id)) {
       req.team = team;

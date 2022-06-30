@@ -13,4 +13,7 @@ export const errorMsg = {
     invalidEmail: "adresse email invalide",
     invalidFormat: "donnée invalide",
   },
+  member: {
+    allreadyExist: "Déjà membre du groupe",
+  },
 };

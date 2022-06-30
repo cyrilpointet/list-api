@@ -24,6 +24,7 @@ export const isTeamManager = async (
     });
     if (!team) {
       res.status(404).json(errorMsg.notFound);
+      return;
     }
     if (
       team.members.find(
