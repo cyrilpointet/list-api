@@ -2,24 +2,25 @@ import * as express from "express";
 
 import { auth } from "../../user/middleware/auth";
 import {
-  teamParamValidator,
   teamCreateValidator,
+  teamUpdateValidator,
 } from "../middleware/teamValidator";
 import { teamController } from "../controller/teamController";
 import { isTeamManager } from "../middleware/isTeamManager";
+import { isTeamMember } from "../middleware/isTeamMember";
 
 const teamRouter = express.Router();
 
 teamRouter.post("/", auth, teamCreateValidator, teamController.create);
 teamRouter.get("/", auth, teamController.getAll);
-teamRouter.get(
+teamRouter.get("/:teamId", auth, isTeamMember, teamController.get);
+teamRouter.put(
   "/:teamId",
   auth,
-  teamParamValidator,
+  teamUpdateValidator,
   isTeamManager,
-  teamController.read
+  teamController.update
 );
-teamRouter.put("/:teamId", auth, isTeamManager, teamController.update);
 teamRouter.delete("/:teamId", auth, isTeamManager, teamController.delete);
 
 export { teamRouter };

@@ -20,8 +20,17 @@ export const teamCreateValidator = [
   },
 ];
 
-export const teamParamValidator = [
-  param("teamId").exists().toInt(),
+export const teamUpdateValidator = [
+  check("name")
+    .trim()
+    .escape()
+    .not()
+    .isEmpty()
+    .withMessage(`nom: ${errorMsg.validation.required}`)
+    .bail()
+    .isLength({ min: 3 })
+    .withMessage(`${errorMsg.validation.minLenght} : 3`)
+    .bail(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())

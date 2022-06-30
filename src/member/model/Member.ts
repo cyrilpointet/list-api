@@ -1,14 +1,20 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../../user/model/User";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+} from "typeorm";
 import { Team } from "../../team/model/Team";
+import { User } from "../../user/model/User";
 
 @Entity()
-export class Post {
+export class Member {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  content: string;
+  manager: boolean;
 
   @ManyToOne(() => Team, (team) => team.posts, {
     onDelete: "CASCADE",
@@ -18,5 +24,5 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: "CASCADE",
   })
-  author: User;
+  user: User;
 }

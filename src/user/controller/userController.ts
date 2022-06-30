@@ -9,20 +9,6 @@ import { QueryHelper } from "../../utils/QueryHelper";
 const userRepository = AppDataSource.getRepository(User);
 
 const userController = {
-  async getAll(req: Request, res: Response) {
-    try {
-      const users = await userRepository.find(QueryHelper.getOptions(req));
-      res.json(users);
-    } catch (e) {
-      console.log(e);
-      res.status(401).json(e);
-    }
-  },
-
-  async read(req: Request, res: Response) {
-    res.json(req.loggedUser);
-  },
-
   async create(req: Request, res: Response) {
     try {
       const hash = bcrypt.hashSync(req.body.password, 10);
@@ -41,6 +27,35 @@ const userController = {
           }
         ),
       });
+    } catch (e) {
+      console.log(e);
+      res.status(422).json(e.message);
+    }
+  },
+
+  async getAll(req: Request, res: Response) {
+    try {
+      const users = await userRepository.find(QueryHelper.getOptions(req));
+      res.json(users);
+    } catch (e) {
+      console.log(e);
+      res.status(401).json(e);
+    }
+  },
+
+  async get(req: Request, res: Response) {
+    res.json(req.loggedUser);
+  },
+
+  async update(req: Request, res: Response) {
+    try {
+      const {
+        loggedUser,
+        body: { name },
+      } = req;
+      loggedUser.name = name;
+      const updatedUser = await userRepository.save(loggedUser);
+      res.json(updatedUser);
     } catch (e) {
       console.log(e);
       res.status(422).json(e.message);
@@ -69,7 +84,7 @@ const userController = {
         where: {
           id: user.id,
         },
-        relations: ["teams"],
+        relations: ["membership.team"],
       });
       res.json({
         user: loggedUser,

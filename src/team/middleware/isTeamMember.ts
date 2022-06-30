@@ -5,7 +5,7 @@ import { errorMsg } from "../../constantes/errorMsg";
 
 const teamRepository = AppDataSource.getRepository(Team);
 
-export const isTeamManager = async (
+export const isTeamMember = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,11 +25,7 @@ export const isTeamManager = async (
     if (!team) {
       res.status(404).json(errorMsg.notFound);
     }
-    if (
-      team.members.find(
-        (elem) => elem.user.id === req.loggedUser.id && elem.manager
-      )
-    ) {
+    if (team.members.find((elem) => elem.user.id === req.loggedUser.id)) {
       req.team = team;
       next();
     } else {

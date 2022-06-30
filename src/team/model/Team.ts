@@ -1,12 +1,6 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { User } from "../../user/model/User";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Post } from "../../post/model/Post";
+import { Member } from "../../member/model/Member";
 
 @Entity()
 export class Team {
@@ -16,9 +10,9 @@ export class Team {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.managedTeams)
-  manager: User;
-
   @OneToMany(() => Post, (post) => post.team)
   posts: Post[];
+
+  @OneToMany(() => Member, (member) => member.team)
+  members: Member[];
 }

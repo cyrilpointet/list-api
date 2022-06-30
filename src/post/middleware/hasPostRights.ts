@@ -23,7 +23,9 @@ export const hasPostRights = async (
       relations: ["author", "team", "team.manager"],
     });
     if (
-      post.team.manager.id === req.loggedUser.id ||
+      post.team.members.find(
+        (elem) => elem.id === req.loggedUser.id && elem.manager
+      ) ||
       post.author.id === req.loggedUser.id
     ) {
       req.post = post;

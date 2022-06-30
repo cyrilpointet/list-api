@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Team } from "../../team/model/Team";
 import { Post } from "../../post/model/Post";
+import { Member } from "../../member/model/Member";
 
 @Entity()
 export class User {
@@ -18,9 +18,9 @@ export class User {
   @Column({ select: false })
   password: string;
 
-  @OneToMany(() => Team, (team) => team.manager)
-  managedTeams: Team[];
-
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
+
+  @OneToMany(() => Member, (member) => member.user)
+  membership: Member[];
 }

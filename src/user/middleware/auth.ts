@@ -25,7 +25,7 @@ export const auth = async (
       where: {
         id: decodedToken.userId,
       },
-      relations: ["teams"],
+      relations: ["membership.team"],
     });
     if (!user) {
       res.status(401).json(errorMsg.auth.invalidToken);
