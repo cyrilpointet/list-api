@@ -15,5 +15,7 @@ export const errorMsg = {
   },
   member: {
     allreadyExist: "Déjà membre du groupe",
+    memberIsManager: "impossible de supprimer un manager",
+    notEnoughManager: "impossible de laisser un groupe sans manager",
   },
 };

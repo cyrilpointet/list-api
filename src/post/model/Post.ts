@@ -1,14 +1,27 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { User } from "../../user/model/User";
 import { Team } from "../../team/model/Team";
 
 @Entity()
 export class Post {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Column()
   content: string;
+
+  @CreateDateColumn({ name: "created_at" })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: "updated_at" })
+  updatedAt!: Date;
 
   @ManyToOne(() => Team, (team) => team.posts, {
     onDelete: "CASCADE",

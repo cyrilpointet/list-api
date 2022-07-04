@@ -1,41 +1,48 @@
 import { NextFunction, Request, Response } from "express";
-import { AppDataSource } from "../../data-source";
-import { Team } from "../model/Team";
 import { errorMsg } from "../../constantes/errorMsg";
+import { AppDataSource } from "../../data-source";
+import { Member } from "../model/Member";
+import { Team } from "../../team/model/Team";
 
+const memberRepository = AppDataSource.getRepository(Member);
 const teamRepository = AppDataSource.getRepository(Team);
 
-export const isTeamManager = async (
+export const hasMemberRights = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  if (!req.params.teamId && !req.body.teamId) {
+  if (!req.params.memberId) {
     res.status(403).json(errorMsg.validation.missingParam);
     return;
   }
-  const teamId = req.params.teamId || req.body.teamId;
-
   try {
-    const team = await teamRepository.findOne({
+    const member = await memberRepository.findOne({
       where: {
-        id: teamId,
+        id: req.params.memberId,
       },
-      relations: ["posts", "members.user"],
+      relations: ["team", "user"],
     });
-    if (!team) {
+    if (!member) {
       res.status(404).json(errorMsg.notFound);
       return;
     }
+    const team = await teamRepository.findOne({
+      where: {
+        id: member.team.id,
+      },
+      relations: ["posts", "members.user"],
+    });
     if (
+      member.user.id === req.loggedUser.id ||
       team.members.find(
         (elem) => elem.user.id === req.loggedUser.id && elem.manager
       )
     ) {
+      req.member = member;
       req.team = team;
       next();
-    } else {
-      res.status(401).json(errorMsg.auth.insufficientRights);
+      return;
     }
   } catch (e) {
     console.log(e);
