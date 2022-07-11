@@ -17,9 +17,9 @@ memberRouter.post(
   memberCreateValidator,
   memberController.create
 );
-memberRouter.get("/", auth, memberController.gettAll);
+memberRouter.get("/", auth, memberController.getAll);
 memberRouter.get("/:memberId", auth, hasMemberRights, memberController.get);
-memberRouter.post(
+memberRouter.put(
   "/:memberId",
   memberUpdateValidator,
   auth,

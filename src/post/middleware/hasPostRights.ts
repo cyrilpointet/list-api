@@ -20,13 +20,13 @@ export const hasPostRights = async (
       where: {
         id: postId,
       },
-      relations: ["author", "team", "team.manager"],
+      relations: ["author", "team", "team.members", "team.members.user"],
     });
     if (
+      post.author.id === req.loggedUser.id ||
       post.team.members.find(
-        (elem) => elem.id === req.loggedUser.id && elem.manager
-      ) ||
-      post.author.id === req.loggedUser.id
+        (elem) => elem.user.id === req.loggedUser.id && elem.manager
+      )
     ) {
       req.post = post;
       next();

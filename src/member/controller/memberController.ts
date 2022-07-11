@@ -52,7 +52,7 @@ const memberController = {
     }
   },
 
-  async gettAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response) {
     try {
       const members = await memberRepository.find({
         ...QueryHelper.getOptions(req),
@@ -97,6 +97,7 @@ const memberController = {
   async delete(req: Request, res: Response) {
     if (req.member.manager) {
       res.status(403).json(errorMsg.member.memberIsManager);
+      return;
     }
     try {
       await memberRepository.delete(req.member.id);

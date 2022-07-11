@@ -21,7 +21,7 @@ export const postCreateValidator = [
 ];
 
 export const postParamValidator = [
-  param("postId").exists().toInt(),
+  param("postId").exists(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
