@@ -46,7 +46,6 @@ const memberController = {
       });
       res.json(member);
     } catch (e) {
-      console.log("coucou");
       console.log(e);
       res.status(422).json(e.message);
     }

@@ -7,10 +7,10 @@ import { Member } from "./member/model/Member";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
-  username: "postgres",
-  password: "postgres",
-  database: "postgres",
+  host: process.env.POSTGRES_HOST,
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
   synchronize: true,
   logging: false,
   entities: [User, Team, Post, Member],
