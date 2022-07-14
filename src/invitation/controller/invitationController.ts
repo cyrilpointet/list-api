@@ -5,9 +5,13 @@ import { Invitation } from "../model/Invitation";
 import { errorMsg } from "../../constantes/errorMsg";
 import { Team } from "../../team/model/Team";
 import { QueryHelper } from "../../utils/QueryHelper";
+import { Member } from "../../member/model/Member";
+import { User } from "../../user/model/User";
 
 const invitationRepository = AppDataSource.getRepository(Invitation);
 const teamRepository = AppDataSource.getRepository(Team);
+const memberRepository = AppDataSource.getRepository(Member);
+const userRepository = AppDataSource.getRepository(User);
 
 const invitationController = {
   async createFromTeam(req: Request, res: Response) {
@@ -48,6 +52,7 @@ const invitationController = {
       res.status(422).json(e.message);
     }
   },
+
   async createFromUser(req: Request, res: Response) {
     try {
       const testInvitation = await invitationRepository
@@ -97,6 +102,67 @@ const invitationController = {
         QueryHelper.getOptions(req)
       );
       res.json(invitations);
+    } catch (e) {
+      console.log(e);
+      res.status(422).json(e.message);
+    }
+  },
+
+  async accept(req: Request, res: Response) {
+    if (!req.params.invitationId) {
+      res.status(403).json(errorMsg.validation.missingParam);
+      return;
+    }
+    try {
+      const invitation = await invitationRepository.findOne({
+        where: {
+          id: req.params.invitationId,
+        },
+        relations: ["team", "team.members.user"],
+      });
+
+      if (!invitation) {
+        res.status(404).json(errorMsg.notFound);
+        return;
+      }
+
+      if (
+        (invitation.fromTeam && req.loggedUser.email !== invitation.email) ||
+        (!invitation.fromTeam &&
+          !invitation.team.members.find(
+            (elem) => elem.user.id === req.loggedUser.id && elem.manager
+          ))
+      ) {
+        res.status(401).json(errorMsg.auth.insufficientRights);
+        return;
+      }
+
+      const invitedUser = await userRepository.findOne({
+        where: {
+          email: invitation.email,
+        },
+      });
+      if (!invitedUser) {
+        res.status(401).json(errorMsg.invitation.unknownMember);
+        return;
+      }
+
+      if (
+        invitation.team.members.find((elem) => elem.user.id === invitedUser.id)
+      ) {
+        await invitationRepository.delete(invitation.id);
+        res.status(422).json(errorMsg.member.allreadyExist);
+        return;
+      }
+
+      const member = await memberRepository.save({
+        team: invitation.team,
+        user: invitedUser,
+        manager: false,
+      });
+      await invitationRepository.delete(invitation.id);
+
+      res.json(member);
     } catch (e) {
       console.log(e);
       res.status(422).json(e.message);

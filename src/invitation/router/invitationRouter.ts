@@ -27,4 +27,6 @@ invitationRouter.post(
 
 invitationRouter.get("/", auth, invitationController.getAll);
 
+invitationRouter.put("/:invitationId", auth, invitationController.accept);
+
 export { invitationRouter };

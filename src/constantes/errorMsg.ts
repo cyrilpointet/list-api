@@ -20,5 +20,6 @@ export const errorMsg = {
   },
   invitation: {
     allreadyExist: "Invitation déjà en cours",
+    unknownMember: "Membre inconnu",
   },
 };
