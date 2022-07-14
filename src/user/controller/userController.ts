@@ -5,8 +5,10 @@ import * as jsonwebtoken from "jsonwebtoken";
 import { AppDataSource } from "../../data-source";
 import { User } from "../model/User";
 import { QueryHelper } from "../../utils/QueryHelper";
+import { Invitation } from "../../invitation/model/Invitation";
 
 const userRepository = AppDataSource.getRepository(User);
+const invitationRepository = AppDataSource.getRepository(Invitation);
 
 const userController = {
   async create(req: Request, res: Response) {
@@ -17,8 +19,15 @@ const userController = {
         password: hash,
       });
       delete newUser.password;
+      const invitations = await invitationRepository.find({
+        where: {
+          email: newUser.email,
+          fromTeam: true,
+        },
+        relations: ["team"],
+      });
       res.json({
-        user: newUser,
+        user: { ...newUser, invitations },
         token: jsonwebtoken.sign(
           { userId: newUser.id },
           process.env.token || "RANDOM_TOKEN_SECRET",
@@ -44,7 +53,14 @@ const userController = {
   },
 
   async get(req: Request, res: Response) {
-    res.json(req.loggedUser);
+    const invitations = await invitationRepository.find({
+      where: {
+        email: req.loggedUser.email,
+        fromTeam: true,
+      },
+      relations: ["team"],
+    });
+    res.json({ ...req.loggedUser, invitations });
   },
 
   async update(req: Request, res: Response) {
@@ -55,7 +71,14 @@ const userController = {
       } = req;
       loggedUser.name = name;
       const updatedUser = await userRepository.save(loggedUser);
-      res.json(updatedUser);
+      const invitations = await invitationRepository.find({
+        where: {
+          email: updatedUser.email,
+          fromTeam: true,
+        },
+        relations: ["team"],
+      });
+      res.json({ ...updatedUser, invitations });
     } catch (e) {
       console.log(e);
       res.status(422).json(e.message);
@@ -86,13 +109,20 @@ const userController = {
         },
         relations: ["membership.team"],
       });
+      const invitations = await invitationRepository.find({
+        where: {
+          email: user.email,
+          fromTeam: true,
+        },
+        relations: ["team"],
+      });
       res.json({
-        user: loggedUser,
+        user: { ...loggedUser, invitations },
         token: jsonwebtoken.sign(
           { userId: user.id },
           process.env.token || "RANDOM_TOKEN_SECRET",
           {
-            expiresIn: "24h",
+            expiresIn: "72h",
           }
         ),
       });

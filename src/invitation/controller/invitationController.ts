@@ -4,6 +4,7 @@ import { AppDataSource } from "../../data-source";
 import { Invitation } from "../model/Invitation";
 import { errorMsg } from "../../constantes/errorMsg";
 import { Team } from "../../team/model/Team";
+import { QueryHelper } from "../../utils/QueryHelper";
 
 const invitationRepository = AppDataSource.getRepository(Invitation);
 const teamRepository = AppDataSource.getRepository(Team);
@@ -49,7 +50,6 @@ const invitationController = {
   },
   async createFromUser(req: Request, res: Response) {
     try {
-      console.log(req.loggedUser.email);
       const testInvitation = await invitationRepository
         .createQueryBuilder("invitation")
         .where("invitation.email = :email AND invitation.teamId = :teamId", {
@@ -85,6 +85,18 @@ const invitationController = {
       });
 
       res.json(invitation);
+    } catch (e) {
+      console.log(e);
+      res.status(422).json(e.message);
+    }
+  },
+
+  async getAll(req: Request, res: Response) {
+    try {
+      const invitations = await invitationRepository.find(
+        QueryHelper.getOptions(req)
+      );
+      res.json(invitations);
     } catch (e) {
       console.log(e);
       res.status(422).json(e.message);

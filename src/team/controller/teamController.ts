@@ -22,6 +22,7 @@ const teamController = {
       res.json({
         ...team,
         posts: [],
+        invitations: [],
         members: [{ id: member.id, manager: true, user: { id, name, email } }],
       });
     } catch (e) {
