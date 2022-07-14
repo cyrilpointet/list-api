@@ -1,18 +1,28 @@
 import * as express from "express";
 
 import { auth } from "../../user/middleware/auth";
-import { invitationCreateValidator } from "../middleware/invitationValidator";
+import {
+  invitationCreateFromTeamValidator,
+  invitationCreateFromUserValidator,
+} from "../middleware/invitationValidator";
 import { isTeamManager } from "../../team/middleware/isTeamManager";
 import { invitationController } from "../controller/invitationController";
 
 const invitationRouter = express.Router();
 
 invitationRouter.post(
-  "/",
+  "/user",
   auth,
-  invitationCreateValidator,
+  invitationCreateFromTeamValidator,
   isTeamManager,
-  invitationController.create
+  invitationController.createFromTeam
+);
+
+invitationRouter.post(
+  "/team",
+  auth,
+  invitationCreateFromUserValidator,
+  invitationController.createFromUser
 );
 
 export { invitationRouter };

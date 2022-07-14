@@ -13,7 +13,7 @@ const userRepository = AppDataSource.getRepository(User);
 const memberController = {
   async create(req: Request, res: Response) {
     try {
-      const testMember = await AppDataSource.getRepository(Member)
+      const testMember = await memberRepository
         .createQueryBuilder("member")
         .where("member.userId = :userId AND member.teamId = :teamId", {
           userId: req.body.userId,

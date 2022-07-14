@@ -18,4 +18,7 @@ export const errorMsg = {
     memberIsManager: "impossible de supprimer un manager",
     notEnoughManager: "impossible de laisser un groupe sans manager",
   },
+  invitation: {
+    allreadyExist: "Invitation déjà en cours",
+  },
 };

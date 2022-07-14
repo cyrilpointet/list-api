@@ -1,21 +1,23 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Team } from "../../team/model/Team";
-import { User } from "../../user/model/User";
 
 @Entity()
-export class Member {
+export class Invitation {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  @Column({ name: "from_team" })
+  fromTeam: boolean;
+
   @Column()
-  manager: boolean;
+  email: string;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
@@ -27,9 +29,4 @@ export class Member {
     onDelete: "CASCADE",
   })
   team: Team;
-
-  @ManyToOne(() => User, (user) => user.posts, {
-    onDelete: "CASCADE",
-  })
-  user: User;
 }

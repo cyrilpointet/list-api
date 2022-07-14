@@ -12,7 +12,7 @@ import { Member } from "../../member/model/Member";
 @Entity()
 export class Team {
   @PrimaryGeneratedColumn("uuid")
-  id: number;
+  id: string;
 
   @Column()
   name: string;

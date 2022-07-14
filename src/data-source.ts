@@ -4,6 +4,7 @@ import { User } from "./user/model/User";
 import { Team } from "./team/model/Team";
 import { Post } from "./post/model/Post";
 import { Member } from "./member/model/Member";
+import { Invitation } from "./invitation/model/Invitation";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: process.env.POSTGRES_DATABASE,
   synchronize: true,
   logging: false,
-  entities: [User, Team, Post, Member],
+  entities: [User, Team, Post, Member, Invitation],
   migrations: ["src/migration/*.ts"],
   subscribers: [],
 });
