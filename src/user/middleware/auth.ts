@@ -16,6 +16,7 @@ export const auth = async (
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       res.status(401).json(errorMsg.auth.missingToken);
+      return;
     }
     const decodedToken = jsonwebtoken.verify(
       token,
@@ -29,6 +30,7 @@ export const auth = async (
     });
     if (!user) {
       res.status(401).json(errorMsg.auth.invalidToken);
+      return;
     } else {
       delete user.password;
       req.loggedUser = user;

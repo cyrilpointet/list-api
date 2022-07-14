@@ -11,6 +11,7 @@ import { userRouter } from "./user/router/userRouter";
 import { teamRouter } from "./team/router/teamRouter";
 import { postRouter } from "./post/router/postRouter";
 import { memberRouter } from "./member/router/memberRouter";
+import { invitationRouter } from "./invitation/router/invitationRouter";
 
 AppDataSource.initialize()
   .then(async () => {
@@ -24,6 +25,7 @@ AppDataSource.initialize()
     app.use("/team", teamRouter);
     app.use("/post", postRouter);
     app.use("/member", memberRouter);
+    app.use("/invitation", invitationRouter);
 
     // start express server
     app.listen(8080);
