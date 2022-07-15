@@ -109,37 +109,10 @@ const invitationController = {
   },
 
   async accept(req: Request, res: Response) {
-    if (!req.params.invitationId) {
-      res.status(403).json(errorMsg.validation.missingParam);
-      return;
-    }
     try {
-      const invitation = await invitationRepository.findOne({
-        where: {
-          id: req.params.invitationId,
-        },
-        relations: ["team", "team.members.user"],
-      });
-
-      if (!invitation) {
-        res.status(404).json(errorMsg.notFound);
-        return;
-      }
-
-      if (
-        (invitation.fromTeam && req.loggedUser.email !== invitation.email) ||
-        (!invitation.fromTeam &&
-          !invitation.team.members.find(
-            (elem) => elem.user.id === req.loggedUser.id && elem.manager
-          ))
-      ) {
-        res.status(401).json(errorMsg.auth.insufficientRights);
-        return;
-      }
-
       const invitedUser = await userRepository.findOne({
         where: {
-          email: invitation.email,
+          email: req.invitation.email,
         },
       });
       if (!invitedUser) {
@@ -148,21 +121,37 @@ const invitationController = {
       }
 
       if (
-        invitation.team.members.find((elem) => elem.user.id === invitedUser.id)
+        req.invitation.team.members.find(
+          (elem) => elem.user.id === invitedUser.id
+        )
       ) {
-        await invitationRepository.delete(invitation.id);
+        await invitationRepository.delete(req.invitation.id);
         res.status(422).json(errorMsg.member.allreadyExist);
         return;
       }
 
       const member = await memberRepository.save({
-        team: invitation.team,
+        team: req.invitation.team,
         user: invitedUser,
         manager: false,
       });
-      await invitationRepository.delete(invitation.id);
+      await invitationRepository.delete(req.invitation.id);
 
       res.json(member);
+    } catch (e) {
+      console.log(e);
+      res.status(422).json(e.message);
+    }
+  },
+
+  async delete(req: Request, res: Response) {
+    if (!req.params.invitationId) {
+      res.status(403).json(errorMsg.validation.missingParam);
+      return;
+    }
+    try {
+      await invitationRepository.delete(req.invitation.id);
+      res.json({ message: "deleted" });
     } catch (e) {
       console.log(e);
       res.status(422).json(e.message);

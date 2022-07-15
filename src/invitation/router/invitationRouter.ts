@@ -7,6 +7,7 @@ import {
 } from "../middleware/invitationValidator";
 import { isTeamManager } from "../../team/middleware/isTeamManager";
 import { invitationController } from "../controller/invitationController";
+import { hasInvitationRights } from "../middleware/hasInvitationRights";
 
 const invitationRouter = express.Router();
 
@@ -27,6 +28,18 @@ invitationRouter.post(
 
 invitationRouter.get("/", auth, invitationController.getAll);
 
-invitationRouter.put("/:invitationId", auth, invitationController.accept);
+invitationRouter.put(
+  "/:invitationId",
+  auth,
+  hasInvitationRights,
+  invitationController.accept
+);
+
+invitationRouter.delete(
+  "/:invitationId",
+  auth,
+  hasInvitationRights,
+  invitationController.delete
+);
 
 export { invitationRouter };
