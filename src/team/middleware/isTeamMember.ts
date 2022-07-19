@@ -3,9 +3,12 @@ import { AppDataSource } from "../../data-source";
 import { Team } from "../model/Team";
 import { errorMsg } from "../../constantes/errorMsg";
 import { Invitation } from "../../invitation/model/Invitation";
+import { User } from "../../user/model/User";
+import { invitationHelper } from "../../utils/invitationHelper";
 
 const teamRepository = AppDataSource.getRepository(Team);
 const invitationRepository = AppDataSource.getRepository(Invitation);
+const userRepository = AppDataSource.getRepository(User);
 
 export const isTeamMember = async (
   req: Request,
@@ -40,12 +43,15 @@ export const isTeamMember = async (
         (elem) => elem.user.id === req.loggedUser.id && elem.manager
       )
     ) {
-      invitations = await invitationRepository.find({
-        where: {
-          team: team,
-          fromTeam: false,
-        },
-      });
+      const rawInvitations = await invitationRepository
+        .createQueryBuilder("invitation")
+        .where("invitation.teamId = :teamId AND invitation.fromTeam = false", {
+          teamId: team.id,
+        })
+        .getMany();
+      invitations = await invitationHelper.populateInvitationWithUser(
+        rawInvitations
+      );
     }
     req.team = { ...team, invitations };
     next();

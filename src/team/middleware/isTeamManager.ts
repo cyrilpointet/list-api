@@ -3,6 +3,8 @@ import { AppDataSource } from "../../data-source";
 import { Team } from "../model/Team";
 import { errorMsg } from "../../constantes/errorMsg";
 import { Invitation } from "../../invitation/model/Invitation";
+import { User } from "../../user/model/User";
+import { invitationHelper } from "../../utils/invitationHelper";
 
 const teamRepository = AppDataSource.getRepository(Team);
 const invitationRepository = AppDataSource.getRepository(Invitation);
@@ -29,6 +31,7 @@ export const isTeamManager = async (
       res.status(404).json(errorMsg.notFound);
       return;
     }
+
     if (
       !team.members.find(
         (elem) => elem.user.id === req.loggedUser.id && elem.manager
@@ -37,12 +40,17 @@ export const isTeamManager = async (
       res.status(401).json(errorMsg.auth.insufficientRights);
       return;
     }
-    const invitations = await invitationRepository.find({
-      where: {
-        team: team,
-        fromTeam: false,
-      },
-    });
+
+    const rawInvitations = await invitationRepository
+      .createQueryBuilder("invitation")
+      .where("invitation.teamId = :teamId AND invitation.fromTeam = false", {
+        teamId: team.id,
+      })
+      .getMany();
+    const invitations = await invitationHelper.populateInvitationWithUser(
+      rawInvitations
+    );
+
     req.team = { ...team, invitations };
     next();
   } catch (e) {

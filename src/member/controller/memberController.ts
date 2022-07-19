@@ -70,7 +70,7 @@ const memberController = {
 
   async update(req: Request, res: Response) {
     try {
-      const testMembers = await AppDataSource.getRepository(Member)
+      const testMembers = await memberRepository
         .createQueryBuilder("member")
         .where("member.teamId = :teamId AND member.manager = true", {
           teamId: req.team.id,
